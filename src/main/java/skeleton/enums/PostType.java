@@ -3,7 +3,7 @@ package skeleton.enums;
 /**
  * @author Beldon
  */
-public enum PostTypeEnum {
+public enum PostType {
     /**
      * 文章页
      */

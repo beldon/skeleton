@@ -2,8 +2,8 @@ package skeleton.entity;
 
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
-import skeleton.enums.PostStatusEnum;
-import skeleton.enums.PostTypeEnum;
+import skeleton.enums.PostStatus;
+import skeleton.enums.PostType;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -53,9 +53,9 @@ public class Post implements Serializable {
     @Column(unique = true)
     private String url;
 
-    private PostTypeEnum type;
+    private PostType type;
 
-    private PostStatusEnum status;
+    private PostStatus status;
 
     @Column(name = "category_id", length = 10)
     private String categoryId;
