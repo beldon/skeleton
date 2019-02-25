@@ -1,3 +1,56 @@
+server:
+  port: 1516
 spring:
   application:
     name: skeleton
+  profiles:
+    active: @profileActive@
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: hikaricpPool
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+  jpa:
+    database: H2
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+  mvc:
+    static-path-pattern: /static/**
+    formcontent:
+      filter:
+        enabled: false
+  freemarker:
+    template-loader-path: classpath:/templates
+    cache: true
+
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration,\
+      org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration,\
+      org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration,\
+      org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,\
+      org.springframework.boot.autoconfigure.jdbc.XADataSourceAutoConfiguration,\
+      org.springframework.boot.autoconfigure.jdbc.JndiDataSourceAutoConfiguration,\
+      org.springframework.boot.autoconfigure.transaction.jta.JtaAutoConfiguration,\
+      org.springframework.boot.autoconfigure.websocket.WebSocketAutoConfiguration,\
+      org.springframework.boot.autoconfigure.websocket.WebSocketMessagingAutoConfiguration,\
+      org.springframework.boot.autoconfigure.freemarker.FreeMarkerAutoConfiguration,\
+      org.springframework.boot.autoconfigure.groovy.template.GroovyTemplateAutoConfiguration,\
+      org.springframework.boot.autoconfigure.mustache.MustacheAutoConfiguration,\
+      org.springframework.boot.autoconfigure.mail.MailSenderAutoConfiguration,\
+      org.springframework.boot.autoconfigure.mail.MailSenderValidatorAutoConfiguration,\
+      org.springframework.boot.actuate.autoconfigure.TraceRepositoryAutoConfiguration,\
+      org.springframework.boot.actuate.autoconfigure.TraceWebFilterAutoConfiguration,\
+      org.springframework.boot.actuate.autoconfigure.MetricFilterAutoConfiguration
+logging:
+  path: logs/
+  file: logs/${spring.application.name}.log
