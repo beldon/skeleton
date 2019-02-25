@@ -120,6 +120,7 @@ public abstract class BaseRememberMeService implements RememberMeService {
         long expiryTime = calculateLoginLifetime();
         String encodeCookie = encodeCookie(expiryTime, user.getAccount(), signature);
         Cookie cookie = new Cookie(rememberKey, encodeCookie);
+        cookie.setHttpOnly(true);
         cookie.setMaxAge(getExpiry());
         cookie.setPath("/");
         response.addCookie(cookie);
