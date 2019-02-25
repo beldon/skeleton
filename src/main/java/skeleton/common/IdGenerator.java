@@ -1,9 +1,8 @@
 package skeleton.common;
 
-import skeleton.common.util.IdGeneratorUtil;
-import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
+import skeleton.common.util.IdGeneratorUtil;
 
 import java.io.Serializable;
 
