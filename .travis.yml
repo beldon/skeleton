@@ -1,11 +1,24 @@
+dist: trusty
+sudo: required
 language: java
+addons:
+  sonarcloud:
+    organization: "$SONAR_ORG"
+    token:
+      secure: "$SONAR_TOKEN"
+
 jdk:
   - oraclejdk11
   - openjdk11
 
 script:
   - mvn test
-  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
