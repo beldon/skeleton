@@ -20,36 +20,38 @@ public class RelativeDateFormat {
     private static final String ONE_DAY_AGO = "天前";
     private static final String ONE_MONTH_AGO = "月前";
     private static final String ONE_YEAR_AGO = "年前";
+    private static final String YESTERDAY = "昨天";
 
+    private RelativeDateFormat() {
+
+    }
 
     public static String format(Date date) {
         long delta = System.currentTimeMillis() - date.getTime();
         if (delta < ONE_MINUTE) {
-            long seconds = toSeconds(delta);
-            return (seconds <= 0 ? 1 : seconds) + ONE_SECOND_AGO;
+            return populateMessage(toSeconds(delta), ONE_SECOND_AGO);
+
         }
         if (delta < FORTY_FIVE_MINUTE) {
-            long minutes = toMinutes(delta);
-            return (minutes <= 0 ? 1 : minutes) + ONE_MINUTE_AGO;
+            return populateMessage(toMinutes(delta), ONE_MINUTE_AGO);
         }
         if (delta < ONE_DAY) {
-            long hours = toHours(delta);
-            return (hours <= 0 ? 1 : hours) + ONE_HOUR_AGO;
+            return populateMessage(toHours(delta), ONE_HOUR_AGO);
         }
         if (delta < TWO_DAY) {
-            return "昨天";
+            return YESTERDAY;
         }
         if (delta < ONE_MONTH) {
-            long days = toDays(delta);
-            return (days <= 0 ? 1 : days) + ONE_DAY_AGO;
+            return populateMessage(toDays(delta), ONE_DAY_AGO);
         }
         if (delta < ONE_YEAR) {
-            long months = toMonths(delta);
-            return (months <= 0 ? 1 : months) + ONE_MONTH_AGO;
+            return populateMessage(toMonths(delta), ONE_MONTH_AGO);
         }
+        return populateMessage(toYears(delta), ONE_YEAR_AGO);
+    }
 
-        long years = toYears(delta);
-        return (years <= 0 ? 1 : years) + ONE_YEAR_AGO;
+    private static String populateMessage(long time, String suffix) {
+        return (time <= 0 ? 1 : time) + suffix;
     }
 
     private static long toSeconds(long date) {
