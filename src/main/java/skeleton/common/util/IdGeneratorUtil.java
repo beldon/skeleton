@@ -6,8 +6,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author Beldon
  */
 public class IdGeneratorUtil {
-    private volatile AtomicLong lastTimeContainer = new AtomicLong(0);
-    private volatile AtomicLong countContainer = new AtomicLong();
+    private final AtomicLong lastTimeContainer = new AtomicLong(0);
+    private final AtomicLong countContainer = new AtomicLong();
 
     private static IdGeneratorUtil instance = new IdGeneratorUtil();
 
