@@ -6,6 +6,10 @@ package skeleton.web.security;
 public class AuthenticationContextHolder {
     private static final ThreadLocal<Authentication> CONTEXT_HOLDER = new ThreadLocal<>();
 
+    private AuthenticationContextHolder() {
+
+    }
+
     public static Authentication getAuthentication() {
         return CONTEXT_HOLDER.get();
     }

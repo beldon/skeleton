@@ -27,8 +27,8 @@ import java.util.Optional;
 public abstract class BaseRememberMeService implements RememberMeService {
     private static final String DELIMITER = ":";
     private static final int COOKIE_LENGTH = 3;
-    private String rememberKey = DEFAULT_REMEMBER_ME_KEY;
-    private int expiry = DEFAULT_REMEMBER_ME_EXPIRY;
+    private String rememberKey = CommonConstant.DEFAULT_REMEMBER_ME_KEY;
+    private int expiry = CommonConstant.DEFAULT_REMEMBER_ME_EXPIRY;
 
     private final UserAutoRepo userAutoRepo;
 
