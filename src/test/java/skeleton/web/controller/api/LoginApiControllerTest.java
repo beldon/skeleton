@@ -1,18 +1,23 @@
 package skeleton.web.controller.api;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.ResultActions;
 import skeleton.AbstractControllerTest;
+import skeleton.constant.CommonConstant;
 import skeleton.entity.User;
 import skeleton.repo.UserAutoRepo;
 import skeleton.service.PasswordService;
 import skeleton.web.controller.MockUtils;
+import skeleton.web.security.Authentication;
 import skeleton.web.vo.LoginVO;
 
+import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -52,9 +57,18 @@ public class LoginApiControllerTest extends AbstractControllerTest {
         loginVO.setAccount(user.getAccount());
         loginVO.setPassword(rawPassword);
 
-        mockMvc.perform(MockUtils.populatePostBuilder("/pub/user/login", loginVO))
+        ResultActions resultActions = mockMvc.perform(MockUtils.populatePostBuilder("/pub/user/login", loginVO))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.code").value("0"));
+
+        HttpSession session = resultActions.andReturn().getRequest().getSession();
+        Authentication authentication = (Authentication) session.getAttribute(CommonConstant.Session.AUTHENTICATION);
+        Assert.assertNotNull(authentication);
+        Assert.assertTrue(authentication.isAuthenticated());
+        User user = authentication.user();
+
+        Assert.assertEquals(this.user.getId(), user.getId());
+        Assert.assertEquals(this.user.getAccount(), user.getAccount());
     }
 }

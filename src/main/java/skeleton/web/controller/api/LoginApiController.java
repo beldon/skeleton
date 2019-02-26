@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 import skeleton.entity.User;
 import skeleton.repo.UserAutoRepo;
 import skeleton.service.PasswordService;
+import skeleton.web.security.remember.RememberMeService;
 import skeleton.web.vo.LoginVO;
 import skeleton.web.vo.ResponseVO;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -24,14 +27,18 @@ public class LoginApiController {
 
     private final UserAutoRepo userAutoRepo;
     private final PasswordService passwordService;
+    private final RememberMeService rememberMeService;
 
-    public LoginApiController(UserAutoRepo userAutoRepo, PasswordService passwordService) {
+    public LoginApiController(UserAutoRepo userAutoRepo, PasswordService passwordService,
+                              RememberMeService rememberMeService) {
         this.userAutoRepo = userAutoRepo;
         this.passwordService = passwordService;
+        this.rememberMeService = rememberMeService;
     }
 
     @PostMapping("/login")
-    public ResponseVO login(@Valid @RequestBody LoginVO loginVO) {
+    public ResponseVO login(@Valid @RequestBody LoginVO loginVO, HttpServletRequest request,
+                            HttpServletResponse response) {
         Optional<User> userOptional = userAutoRepo.findByAccount(loginVO.getAccount());
         if (userOptional.isEmpty()) {
             log.warn("user [{}] does not exist.", loginVO.getAccount());
@@ -43,6 +50,7 @@ public class LoginApiController {
             log.warn("[{}] pass error", loginVO.getAccount());
             return ResponseVO.error("password error");
         }
+        rememberMeService.login(request, response, user);
         return ResponseVO.success();
     }
 }
