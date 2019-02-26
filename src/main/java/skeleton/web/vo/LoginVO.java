@@ -1,15 +1,15 @@
 package skeleton.web.vo;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 
 /**
  * @author Beldon
  */
-@Data
-@ToString
+@Getter
+@Setter
 public class LoginVO {
     @NotEmpty(message = "account can't be empty")
     private String account;

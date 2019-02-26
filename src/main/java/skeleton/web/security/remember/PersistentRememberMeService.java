@@ -33,6 +33,13 @@ public class PersistentRememberMeService extends BaseRememberMeService {
         this.maxTokenNum = maxTokenNum;
     }
 
+    public PersistentRememberMeService(RememberMeTokenAutoRepo rememberMeTokenAutoRepo,
+                                       UserAutoRepo userAutoRepo, int maxTokenNum, String rememberKey, int expiry) {
+        super(userAutoRepo, rememberKey, expiry);
+        this.rememberMeTokenAutoRepo = rememberMeTokenAutoRepo;
+        this.maxTokenNum = maxTokenNum;
+    }
+
     @Override
     protected void loginSuccess(HttpServletRequest request, HttpServletResponse response, User user, String signature) {
         checkAndCleanMoreToken(user.getAccount());

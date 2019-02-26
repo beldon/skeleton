@@ -28,6 +28,10 @@ public abstract class BaseRememberMeService implements RememberMeService {
     private static final String DELIMITER = ":";
     private static final int COOKIE_LENGTH = 3;
     private String rememberKey = CommonConstant.DEFAULT_REMEMBER_ME_KEY;
+
+    /**
+     * expire time ,second
+     */
     private int expiry = CommonConstant.DEFAULT_REMEMBER_ME_EXPIRY;
 
     private final UserAutoRepo userAutoRepo;
@@ -37,7 +41,7 @@ public abstract class BaseRememberMeService implements RememberMeService {
         this.userAutoRepo = userAutoRepo;
     }
 
-    public BaseRememberMeService(String rememberKey, int expiry, UserAutoRepo userAutoRepo) {
+    public BaseRememberMeService(UserAutoRepo userAutoRepo, String rememberKey, int expiry) {
         this.rememberKey = rememberKey;
         this.expiry = expiry;
         this.userAutoRepo = userAutoRepo;
@@ -150,6 +154,9 @@ public abstract class BaseRememberMeService implements RememberMeService {
 
     private Cookie getRememberCookie(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            return null;
+        }
         for (Cookie cookie : cookies) {
             if (rememberKey.equals(cookie.getName())) {
                 return cookie;

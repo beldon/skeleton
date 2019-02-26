@@ -17,6 +17,7 @@ import skeleton.web.security.Authentication;
 import javax.servlet.http.Cookie;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.*;
 
@@ -94,6 +95,81 @@ public class PersistentRememberMeServiceTest extends AbstractTest {
 
         assertEquals(autoLoginToken.getId(), firstToken.getId());
         assertNotEquals(autoLoginToken.getToken(), firstToken.getToken());
+    }
+
+    @Test
+    public void autoLogin_noCookie() {
+        rememberMeService.login(request, response, user);
+        Cookie rememberCookie = response.getCookie(CommonConstant.DEFAULT_REMEMBER_ME_KEY);
+        assertNotNull(rememberCookie);
+
+        request = new MockHttpServletRequest();
+        Cookie[] cookies = new Cookie[]{};
+        request.setCookies(cookies);
+        response = new MockHttpServletResponse();
+        Authentication authentication = rememberMeService.autoLogin(request, response);
+        assertNull(authentication);
+    }
+
+    @Test
+    public void autoLogin_expire() throws Exception {
+        rememberMeService = new PersistentRememberMeService(rememberMeTokenAutoRepo, userAutoRepo,
+                2, CommonConstant.DEFAULT_REMEMBER_ME_KEY, 1);
+
+        rememberMeService.login(request, response, user);
+        Cookie rememberCookie = response.getCookie(CommonConstant.DEFAULT_REMEMBER_ME_KEY);
+        assertNotNull(rememberCookie);
+        request.setCookies(rememberCookie);
+        response = new MockHttpServletResponse();
+        Authentication authentication = rememberMeService.autoLogin(request, response);
+        assertNotNull(authentication);
+
+        TimeUnit.SECONDS.sleep(1);
+
+        request.setCookies(rememberCookie);
+        response = new MockHttpServletResponse();
+        authentication = rememberMeService.autoLogin(request, response);
+        assertNull(authentication);
+    }
+
+    @Test
+    public void autoLogin_noUser() {
+        rememberMeService.login(request, response, user);
+        Cookie rememberCookie = response.getCookie(CommonConstant.DEFAULT_REMEMBER_ME_KEY);
+        assertNotNull(rememberCookie);
+        request.setCookies(rememberCookie);
+        response = new MockHttpServletResponse();
+        Authentication authentication = rememberMeService.autoLogin(request, response);
+        assertNotNull(authentication);
+
+        userAutoRepo.deleteAll();
+
+        request.setCookies(rememberCookie);
+        response = new MockHttpServletResponse();
+        authentication = rememberMeService.autoLogin(request, response);
+        assertNull(authentication);
+    }
+
+    @Test
+    public void autoLogin_noValidToken() {
+        rememberMeService.login(request, response, user);
+        Cookie rememberCookie = response.getCookie(CommonConstant.DEFAULT_REMEMBER_ME_KEY);
+        assertNotNull(rememberCookie);
+        request.setCookies(rememberCookie);
+        response = new MockHttpServletResponse();
+        Authentication authentication = rememberMeService.autoLogin(request, response);
+        assertNotNull(authentication);
+
+        List<RememberMeToken> tokens = rememberMeTokenAutoRepo.findByAccountOrderByCreateTime(user.getAccount());
+        assertEquals(tokens.size(), 1);
+        RememberMeToken rememberMeToken = tokens.get(0);
+        rememberMeToken.setToken(UUID.randomUUID().toString());
+        rememberMeTokenAutoRepo.save(rememberMeToken);
+
+        request.setCookies(rememberCookie);
+        response = new MockHttpServletResponse();
+        authentication = rememberMeService.autoLogin(request, response);
+        assertNull(authentication);
     }
 
     @Test
