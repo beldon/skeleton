@@ -7,3 +7,8 @@
 ![Java](https://img.shields.io/badge/language-Java-green.svg)
 ![license](https://img.shields.io/badge/license-GNU-green.svg)
 
+
+## About
+
+A blog, for leaning and code clean
+
