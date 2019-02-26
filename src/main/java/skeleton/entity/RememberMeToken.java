@@ -16,7 +16,7 @@ import java.util.Date;
 public class RememberMeToken {
     @Id
     @Column(length = 10)
-    @GeneratedValue(generator = "uuid")
+    @GeneratedValue(generator = "customerId")
     @GenericGenerator(name = "customerId", strategy = "skeleton.common.IdGenerator")
     private String id;
     private String account;

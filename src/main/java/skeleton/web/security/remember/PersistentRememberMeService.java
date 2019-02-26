@@ -26,7 +26,8 @@ public class PersistentRememberMeService extends BaseRememberMeService {
         this.rememberMeTokenAutoRepo = rememberMeTokenAutoRepo;
     }
 
-    public PersistentRememberMeService(RememberMeTokenAutoRepo rememberMeTokenAutoRepo, UserAutoRepo userAutoRepo, int maxTokenNum) {
+    public PersistentRememberMeService(RememberMeTokenAutoRepo rememberMeTokenAutoRepo,
+                                       UserAutoRepo userAutoRepo, int maxTokenNum) {
         super(userAutoRepo);
         this.rememberMeTokenAutoRepo = rememberMeTokenAutoRepo;
         this.maxTokenNum = maxTokenNum;
@@ -67,9 +68,15 @@ public class PersistentRememberMeService extends BaseRememberMeService {
         return rememberMeTokenOptional.isPresent();
     }
 
+    @Override
+    protected void clearToken(String account, String token) {
+        rememberMeTokenAutoRepo.findByAccountAndToken(account, token)
+                .ifPresent(rememberMeTokenAutoRepo::delete);
+    }
+
     private void checkAndCleanMoreToken(String account) {
         List<RememberMeToken> tokens = rememberMeTokenAutoRepo.findByAccountOrderByCreateTime(account);
-        if (tokens.size() > maxTokenNum) {
+        if (tokens.size() >= maxTokenNum) {
             int end = tokens.size() - maxTokenNum + 1;
             for (int i = 0; i < end; i++) {
                 rememberMeTokenAutoRepo.delete(tokens.get(i));

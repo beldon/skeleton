@@ -85,16 +85,17 @@ public abstract class BaseRememberMeService implements RememberMeService {
         if (rememberCookie == null) {
             return;
         }
+        CookieTokens cookieTokens = decodeCookie(rememberCookie.getValue());
+        clearToken(cookieTokens.getAccount(), cookieTokens.getSignature());
+
         rememberCookie.setMaxAge(0);
         rememberCookie.setValue("");
         rememberCookie.setPath("/");
         response.addCookie(rememberCookie);
-        CookieTokens cookieTokens = decodeCookie(rememberCookie.getValue());
-        clearToken(cookieTokens.getSignature());
     }
 
 
-    protected void clearToken(String token) {
+    protected void clearToken(String account, String token) {
 
     }
 
