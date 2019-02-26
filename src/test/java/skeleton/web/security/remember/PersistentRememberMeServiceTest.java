@@ -161,7 +161,7 @@ public class PersistentRememberMeServiceTest extends AbstractTest {
         assertNotNull(authentication);
 
         List<RememberMeToken> tokens = rememberMeTokenAutoRepo.findByAccountOrderByCreateTime(user.getAccount());
-        assertEquals(tokens.size(), 1);
+        assertEquals(1, tokens.size());
         RememberMeToken rememberMeToken = tokens.get(0);
         rememberMeToken.setToken(UUID.randomUUID().toString());
         rememberMeTokenAutoRepo.save(rememberMeToken);
