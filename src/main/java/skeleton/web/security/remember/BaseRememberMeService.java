@@ -1,7 +1,6 @@
 package skeleton.web.security.remember;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
@@ -55,10 +54,10 @@ public abstract class BaseRememberMeService implements RememberMeService {
             return null;
         }
         CookieTokens cookieTokens = decodeCookie(rememberCookie.getValue());
-        if (isTokenExpired(cookieTokens.getExpiryTime())) {
+        if (isTokenExpired(cookieTokens.expiryTime)) {
             return null;
         }
-        String account = cookieTokens.getAccount();
+        String account = cookieTokens.account;
         Optional<User> userOptional = userAutoRepo.findByAccount(account);
         if (userOptional.isEmpty()) {
             return null;
@@ -70,7 +69,7 @@ public abstract class BaseRememberMeService implements RememberMeService {
 
         String signature = makeTokenSignature(calculateLoginLifetime(), user);
         setCookie(user, signature, response);
-        autoLoginSuccess(request, response, user, cookieTokens.getSignature(), signature);
+        autoLoginSuccess(request, response, user, cookieTokens.signature, signature);
         return new Authentication(AuthType.REMEMBER_ME, user);
     }
 
@@ -90,7 +89,7 @@ public abstract class BaseRememberMeService implements RememberMeService {
             return;
         }
         CookieTokens cookieTokens = decodeCookie(rememberCookie.getValue());
-        clearToken(cookieTokens.getAccount(), cookieTokens.getSignature());
+        clearToken(cookieTokens.account, cookieTokens.signature);
 
         rememberCookie.setMaxAge(0);
         rememberCookie.setValue("");
@@ -165,11 +164,10 @@ public abstract class BaseRememberMeService implements RememberMeService {
         return null;
     }
 
-    protected boolean isTokenExpired(long tokenExpiryTime) {
+    private boolean isTokenExpired(long tokenExpiryTime) {
         return tokenExpiryTime < System.currentTimeMillis();
     }
 
-    @Data
     @AllArgsConstructor
     private static final class CookieTokens {
         private long expiryTime;

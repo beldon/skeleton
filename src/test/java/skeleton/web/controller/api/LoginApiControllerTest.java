@@ -70,5 +70,23 @@ public class LoginApiControllerTest extends AbstractControllerTest {
 
         Assert.assertEquals(this.user.getId(), user.getId());
         Assert.assertEquals(this.user.getAccount(), user.getAccount());
+
+
+        loginVO = new LoginVO();
+        loginVO.setAccount(user.getAccount());
+        loginVO.setPassword(UUID.randomUUID().toString());
+        mockMvc.perform(MockUtils.populatePostBuilder("/pub/user/login", loginVO))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.code").value("1"));
+
+        loginVO = new LoginVO();
+        loginVO.setAccount(UUID.randomUUID().toString());
+        loginVO.setPassword(UUID.randomUUID().toString());
+        mockMvc.perform(MockUtils.populatePostBuilder("/pub/user/login", loginVO))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.code").value("1"));
+
     }
 }

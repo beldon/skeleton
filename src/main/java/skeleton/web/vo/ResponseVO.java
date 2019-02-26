@@ -18,11 +18,11 @@ public class ResponseVO<T> {
     }
 
     public static ResponseVO success() {
-        return response(0, null, null);
+        return success(null);
     }
 
-    public ResponseVO success(String msg) {
-        return response(0, msg, null);
+    public static ResponseVO success(String msg) {
+        return success(msg, null);
     }
 
     public static <T> ResponseVO<T> successWithData(T data) {
