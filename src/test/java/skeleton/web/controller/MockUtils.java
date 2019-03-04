@@ -35,11 +35,9 @@ public class MockUtils {
                 .content(jsonParam);
     }
 
-    public static MockHttpServletRequestBuilder populateGetBuilder(String urlTemplate, Object model,
+    public static MockHttpServletRequestBuilder populateGetBuilder(String urlTemplate,
                                                                    Object... urlVariables) {
-        String jsonParam = convertObjectToJson(model);
-        return MockMvcRequestBuilders.get(urlTemplate, urlVariables).contentType(MediaType.APPLICATION_JSON)
-                .content(jsonParam);
+        return MockMvcRequestBuilders.get(urlTemplate, urlVariables).contentType(MediaType.APPLICATION_JSON);
     }
 
     public static MockHttpServletRequestBuilder populateDeleteBuilder(String urlTemplate, Object model,

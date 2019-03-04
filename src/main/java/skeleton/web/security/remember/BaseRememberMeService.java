@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -80,6 +81,8 @@ public abstract class BaseRememberMeService implements RememberMeService {
         String signature = makeTokenSignature(calculateLoginLifetime(), user);
         setCookie(user, signature, response);
         loginSuccess(request, response, user, signature);
+        user.setLastLoginTime(new Date());
+        userAutoRepo.save(user);
     }
 
     @Override
