@@ -7,5 +7,5 @@ import skeleton.entity.Post;
  * @author Beldon
  */
 public interface PostAutoRepo extends JpaRepository<Post, String> {
-
+    int countAllByCategoryId(String categoryId);
 }

@@ -1,7 +1,6 @@
 package skeleton.entity;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -14,7 +13,6 @@ import java.util.Date;
 @Entity
 @Table(name = "category")
 @Data
-@Accessors(chain = true)
 public class Category implements Serializable {
 
     public static final String ROOT = "root";

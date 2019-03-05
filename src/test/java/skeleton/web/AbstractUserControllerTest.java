@@ -11,6 +11,7 @@ import skeleton.service.PasswordService;
 import skeleton.web.controller.MockUtils;
 import skeleton.web.vo.LoginVO;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.Cookie;
 import java.util.UUID;
 
@@ -32,7 +33,7 @@ public abstract class AbstractUserControllerTest extends AbstractControllerTest 
     protected Cookie[] cookies;
 
     @Before
-    public void before() throws Exception {
+    public void initData() throws Exception {
         userAutoRepo.deleteAll();
         user = new User();
         user.setAccount(UUID.randomUUID().toString());

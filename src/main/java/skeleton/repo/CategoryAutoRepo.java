@@ -13,4 +13,6 @@ public interface CategoryAutoRepo extends JpaRepository<Category, String> {
     Optional<Category> findByUrl(String url);
 
     List<Category> findByParentId(String parentId);
+
+    int countAllByParentId(String parentId);
 }
